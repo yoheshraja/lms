@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Overview</title>
+
+    <!-- LOCAL CSS ONLY -->
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-content">
+        <div>Admin Dashboard</div>
+
+        <div class="admin-info">
+            <div class="admin-avatar">
+                <!-- Inline SVG icon -->
+                <svg width="20" height="20" fill="currentColor">
+                    <path d="M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5 
+                    1H5a5 5 0 0 0-5 5v1h20v-1a5 5 0 0 0-5-5z"/>
+                </svg>
+            </div>
+
+            <div class="admin-details">
+                <div class="admin-name">Admin</div>
+                <div class="admin-role">Content Manager</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- LAYOUT -->
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <ul class="sidebar-menu">
+
+            <li><a href="/admin/upload" class="menu-item">
+                <span>📤</span><span>Upload Content</span>
+            </a></li>
+
+            <li><a href="/admin/content-library" class="menu-item">
+                <span>📚</span><span>Content Library</span>
+            </a></li>
+
+            <li><a href="/admin/analytics" class="menu-item">
+                <span>📊</span><span>Analytics</span>
+            </a></li>
+
+            <li><a href="/admin/user-management" class="menu-item">
+                <span>👥</span><span>User Management</span>
+            </a></li>
+
+            <li><a href="/admin/settings" class="menu-item">
+                <span>⚙️</span><span>Settings</span>
+            </a></li>
+
+        </ul>
+
+        <button class="logout btn btn-outline logout-btn" onclick="logout()">
+            🚪 Logout
+        </button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- STAT CARDS -->
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon primary">📄</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="totalContent">0</div>
+                    <div class="stat-label">Total Content</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon success">👥</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="totalUsers">0</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon warning">👁️</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="viewsToday">0</div>
+                    <div class="stat-label">Views Today</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon danger">⬆️</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="uploadsThisWeek">0</div>
+                    <div class="stat-label">Uploads This Week</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RECENT CONTENT -->
+        <div class="form-container">
+            <div class="form-header">
+                <div class="form-title">Recent Content</div>
+                <a href="/admin/content-library" class="btn btn-outline">View All</a>
+            </div>
+
+            <div id="recentContent" class="recent-content-grid"></div>
+
+            <div id="noRecentContent" class="no-content hidden-element">
+                <p>No recent content found. <a href="/admin/upload">Add content</a></p>
+            </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="form-container">
+            <div class="form-header">
+                <div class="form-title">Quick Actions</div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="/admin/upload" class="btn btn-primary">📤 Upload New</a>
+                <a href="/admin/user-management" class="btn btn-outline">➕ Add User</a>
+                <a href="/admin/analytics" class="btn btn-outline">📈 View Analytics</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- LOAD SCRIPT.JS FIRST (handles auth) -->
+<script src="/script.js"></script>
+
+<!-- INLINE JAVASCRIPT FOR DASHBOARD LOGIC ONLY -->
+<script>
+// API Base URL
+const API_BASE = "http://127.0.0.1:8000";
+
+/* ------------------------------
+   LOAD DASHBOARD DATA
+------------------------------ */
+async function loadDashboard() {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+        console.log("[DASHBOARD] No token found");
+        return;
+    }
+
+    console.log("[DASHBOARD] Loading dashboard data...");
+
+    try {
+        // Load analytics
+        const analyticsRes = await fetch(`${API_BASE}/analytics/overview`, {
+            headers: { 
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (analyticsRes.ok) {
+            const data = await analyticsRes.json();
+            console.log("[DASHBOARD] Analytics loaded:", data);
+            updateStats(data);
+        } else if (analyticsRes.status === 401) {
+            console.log("[DASHBOARD] 401 - Token invalid, redirecting to login");
+            sessionStorage.clear();
+            window.location.replace("/login");
+            return;
+        }
+
+        // Load recent content
+        const contentRes = await fetch(`${API_BASE}/get-contents`, {
+            headers: { 
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (contentRes.ok) {
+            const contents = await contentRes.json();
+            console.log("[DASHBOARD] Content loaded:", contents.length, "items");
+            displayRecent(contents);
+        } else if (contentRes.status === 401) {
+            console.log("[DASHBOARD] 401 - Token invalid, redirecting to login");
+            sessionStorage.clear();
+            window.location.replace("/login");
+            return;
+        }
+
+    } catch (err) {
+        console.error("[DASHBOARD] Error loading:", err);
+    }
+}
+
+/* ------------------------------
+   UPDATE STAT CARDS
+------------------------------ */
+function updateStats(s) {
+    document.getElementById("totalContent").textContent = s.total_content || 0;
+    document.getElementById("totalUsers").textContent = s.total_users || 0;
+    document.getElementById("viewsToday").textContent = s.views_today || 0;
+    document.getElementById("uploadsThisWeek").textContent = s.uploads_this_week || 0;
+}
+
+/* ------------------------------
+   SHOW RECENT CONTENT
+------------------------------ */
+function displayRecent(contents) {
+    const grid = document.getElementById("recentContent");
+    const empty = document.getElementById("noRecentContent");
+
+    if (!contents || contents.length === 0) {
+        grid.style.display = "none";
+        empty.classList.remove("hidden-element");
+        return;
+    }
+
+    empty.classList.add("hidden-element");
+    grid.innerHTML = "";
+
+    contents.slice(0, 4).forEach(c => {
+        const card = document.createElement("div");
+        card.className = "content-card";
+
+        const date = new Date(c.created_at).toLocaleDateString();
+        const types = [c.image && "Image", c.audio && "Audio", c.video && "Video"].filter(Boolean).join(", ");
+
+        card.innerHTML = `
+            <div class="content-card-header">
+                <h4>${c.title}</h4>
+                <span class="content-topic">${c.topic}</span>
+            </div>
+
+            <div class="content-card-body">
+                <p>${c.description ? c.description.slice(0, 100) + "..." : "No description"}</p>
+                <div class="content-meta">
+                    <span>📎 ${types || "No files"}</span>
+                    <span>📅 ${date}</span>
+                </div>
+            </div>
+
+            <div class="content-card-actions">
+                <button class="btn btn-sm btn-outline" onclick="viewContent(${c.id})">View</button>
+                <button class="btn btn-sm btn-primary" onclick="editContent(${c.id})">Edit</button>
+            </div>`;
+        
+        grid.appendChild(card);
+    });
+}
+
+/* ------------------------------
+   ACTIONS
+------------------------------ */
+function viewContent(id) {
+    window.location.href = `/admin/content-library#view-${id}`;
+}
+
+function editContent(id) {
+    window.location.href = `/admin/content-library#edit-${id}`;
+}
+
+/* ------------------------------
+   INIT DASHBOARD
+------------------------------ */
+// Wait for page to fully load, then load dashboard data
+window.addEventListener('load', () => {
+    console.log("[DASHBOARD] Page loaded, initializing...");
+    // Small delay to ensure script.js auth check completes
+    setTimeout(() => {
+        if (window.location.pathname === "/admin" && sessionStorage.getItem("token")) {
+            loadDashboard();
+        }
+    }, 100);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Upload Content</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="header">
+    <div class="header-content">
+        <div>Admin Dashboard</div>
+        <div class="admin-info">
+            <div class="admin-avatar">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="admin-details">
+                <div class="admin-name">Admin User</div>
+                <div class="admin-role">Content Manager</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="/admin" class="menu-item active">
+                <i class="fas fa-upload"></i>
+                <span>Upload Content</span>
+            </a></li>
+            <li><a href="/admin/content-library" class="menu-item">
+                <i class="fas fa-folder-open"></i>
+                <span>Content Library</span>
+            </a></li>
+            <li><a href="/admin/analytics" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Analytics</span>
+            </a></li>
+            <li><a href="/admin/user-management" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>User Management</span>
+            </a></li>
+            <li><a href="/admin/settings" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a></li>
+        </ul>
+        
+        <div class="logout btn btn-outline logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Upload Form -->
+        <div class="form-container">
+            <div class="form-header">
+                <div class="form-title">Upload New Content</div>
+                <button class="btn btn-outline" onclick="clearForm()">
+                    <i class="fas fa-history"></i>
+                    <span>Clear Form</span>
+                </button>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="title">Content Title</label>
+                    <input id="title" type="text" placeholder="Enter content title">
+                </div>
+
+                <div class="form-group">
+                    <label for="topic">Topic</label>
+                    <select id="topic">
+                        <option value="">Select a topic</option>
+                        <option value="technology">Technology</option>
+                        <option value="science">Science</option>
+                        <option value="arts">Arts</option>
+                        <option value="business">Business</option>
+                        <option value="health">Health</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="desc">Description</label>
+                    <textarea id="desc" placeholder="Enter content description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Image</label>
+                    <div class="file-input-container">
+                        <input id="image" type="file" accept="image/*">
+                        <label for="image" class="file-input-label">
+                            <i class="fas fa-image file-input-icon"></i>
+                            <span class="file-input-text">Choose image file</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Audio</label>
+                    <div class="file-input-container">
+                        <input id="audio" type="file" accept="audio/*">
+                        <label for="audio" class="file-input-label">
+                            <i class="fas fa-music file-input-icon"></i>
+                            <span class="file-input-text">Choose audio file</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Video</label>
+                    <div class="file-input-container">
+                        <input id="video" type="file" accept="video/*">
+                        <label for="video" class="file-input-label">
+                            <i class="fas fa-video file-input-icon"></i>
+                            <span class="file-input-text">Choose video file</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="uploadContent()">
+                    <i class="fas fa-upload"></i>
+                    <span>Upload Content</span>
+                </button>
+                <button class="btn btn-outline">
+                    <i class="fas fa-save"></i>
+                    <span>Save as Draft</span>
+                </button>
+            </div>
+
+            <div class="loader" id="loader"></div>
+            <div class="message" id="uploadMsg"></div>
+        </div>
+
+        <!-- Upload Guidelines -->
+        <div class="recent-content">
+            <div class="section-header">
+                <div class="section-title">Upload Guidelines</div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <h4><i class="fas fa-info-circle text-primary"></i> Supported Formats</h4>
+                  <ul class="gray-text mt-10 pl-20">
+                        <li>Images: JPG, PNG, GIF (Max: 5MB)</li>
+                        <li>Audio: MP3, WAV, AAC (Max: 50MB)</li>
+                        <li>Video: MP4, MOV, AVI (Max: 500MB)</li>
+                    </ul>
+                </div>
+                <div class="form-group">
+                    <h4><i class="fas fa-clock text-primary"></i> Processing Time</h4>
+                    <p class="gray-text mt-10">
+                        Content may take 2-5 minutes to process depending on file size and server load.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/script.js"></script>
+</body>
+</html>

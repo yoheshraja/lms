@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Auth</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+        .log {
+            background: #2d2d2d;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 3px solid #4a9eff;
+            border-radius: 4px;
+        }
+        .error {
+            border-left-color: #f44336;
+        }
+        .success {
+            border-left-color: #4caf50;
+        }
+        button {
+            background: #4a9eff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #357abd;
+        }
+        pre {
+            background: #1e1e1e;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Auth Debug Tool</h1>
+    
+    <div>
+        <button onclick="testLogin()">Test Login</button>
+        <button onclick="testToken()">Test Token</button>
+        <button onclick="testAnalytics()">Test Analytics API</button>
+        <button onclick="clearLogs()">Clear Logs</button>
+        <button onclick="clearSession()">Clear Session</button>
+    </div>
+
+    <div id="logs"></div>
+
+    <script>
+        const API = "http://127.0.0.1:8000";
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.innerHTML = `<strong>[${new Date().toLocaleTimeString()}]</strong> ${message}`;
+            document.getElementById('logs').appendChild(div);
+            console.log(message);
+        }
+
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+        }
+
+        function clearSession() {
+            sessionStorage.clear();
+            log('✅ Session storage cleared', 'success');
+        }
+
+        async function testLogin() {
+            log('🔐 Testing login...');
+            
+            try {
+                const res = await fetch(`${API}/login`, {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        email: "admin@example.com",
+                        password: "admin123"
+                    })
+                });
+
+                log(`Response status: ${res.status}`);
+                
+                const data = await res.json();
+                log(`Response data: <pre>${JSON.stringify(data, null, 2)}</pre>`);
+
+                if (res.ok && data.token) {
+                    sessionStorage.setItem("token", data.token);
+                    sessionStorage.setItem("userEmail", data.user.email);
+                    log('✅ Login successful! Token saved.', 'success');
+                    log(`Token preview: ${data.token.substring(0, 50)}...`);
+                } else {
+                    log(`❌ Login failed: ${data.detail || 'Unknown error'}`, 'error');
+                }
+            } catch (err) {
+                log(`❌ Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function testToken() {
+            const token = sessionStorage.getItem("token");
+            
+            if (!token) {
+                log('❌ No token found in session storage', 'error');
+                return;
+            }
+
+            log('🎫 Token found!');
+            log(`Token length: ${token.length}`);
+            log(`Token preview: ${token.substring(0, 50)}...`);
+            
+            // Try to decode the JWT (just the payload, not verifying)
+            try {
+                const parts = token.split('.');
+                if (parts.length === 3) {
+                    const payload = JSON.parse(atob(parts[1]));
+                    log(`Decoded payload: <pre>${JSON.stringify(payload, null, 2)}</pre>`);
+                    
+                    const exp = new Date(payload.exp * 1000);
+                    const now = new Date();
+                    log(`Token expires: ${exp.toLocaleString()}`);
+                    log(`Current time: ${now.toLocaleString()}`);
+                    log(`Is expired: ${exp < now ? '❌ YES' : '✅ NO'}`);
+                } else {
+                    log('❌ Invalid JWT format', 'error');
+                }
+            } catch (err) {
+                log(`❌ Could not decode token: ${err.message}`, 'error');
+            }
+        }
+
+        async function testAnalytics() {
+            const token = sessionStorage.getItem("token");
+            
+            if (!token) {
+                log('❌ No token found - login first', 'error');
+                return;
+            }
+
+            log('📊 Testing analytics API...');
+            log(`Endpoint: ${API}/analytics/overview`);
+            log(`Authorization: Bearer ${token.substring(0, 20)}...`);
+
+            try {
+                const res = await fetch(`${API}/analytics/overview`, {
+                    headers: { 
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                log(`Response status: ${res.status}`);
+                log(`Response headers: <pre>${JSON.stringify([...res.headers.entries()], null, 2)}</pre>`);
+
+                if (res.ok) {
+                    const data = await res.json();
+                    log(`✅ Analytics data: <pre>${JSON.stringify(data, null, 2)}</pre>`, 'success');
+                } else {
+                    const text = await res.text();
+                    log(`❌ Request failed: ${text}`, 'error');
+                }
+            } catch (err) {
+                log(`❌ Error: ${err.message}`, 'error');
+                log(`This might be a CORS or network error`, 'error');
+            }
+        }
+
+        // Auto-log current state on load
+        window.addEventListener('load', () => {
+            log('🚀 Debug tool loaded');
+            const token = sessionStorage.getItem("token");
+            if (token) {
+                log(`Found existing token in session storage`);
+                testToken();
+            } else {
+                log('No token in session storage');
+            }
+        });
+    </script>
+</body>
+</html>

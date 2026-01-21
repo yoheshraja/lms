@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Admin Dashboard</title>
+
+    <style>
+        :root {
+            --primary: #4a6cf7;
+            --primary-dark: #2f4bd5;
+            --white: #ffffff;
+            --dark: #222;
+            --gray: #777;
+            --gray-light: #ddd;
+            --border-radius: 12px;
+        }
+
+        body.login-page {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+            font-family: "Inter", sans-serif;
+        }
+
+        .login-container {
+            display: flex;
+            width: 100%;
+            max-width: 900px;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            animation: fadeIn .5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(10px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .login-left {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 40px;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .login-icon-large {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .login-left h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .login-right {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .login-title {
+            margin-bottom: 10px;
+            color: var(--dark);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .login-subtitle {
+            color: var(--gray);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 2px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color .3s;
+            box-sizing: border-box;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray);
+            font-size: 16px;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .3s;
+        }
+
+        .btn-login:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-login:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+        }
+
+        .home-link {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .home-link a {
+            text-decoration: none;
+            color: var(--gray);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: color .3s;
+        }
+
+        .home-link a:hover {
+            color: var(--primary);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loader-icon {
+            margin-left: 8px;
+            font-size: 16px;
+        }
+
+        .message-box {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .message-box.success {
+            display: block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .message-box.error {
+            display: block;
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+                max-width: 450px;
+            }
+            .login-left {
+                padding: 30px;
+            }
+            .login-right {
+                padding: 30px;
+            }
+        }
+    </style>
+
+</head>
+
+<body class="login-page">
+
+    <div class="login-container">
+        
+        <div class="login-left">
+            <div class="login-icon-large">🔐</div>
+            <h2>Admin Portal</h2>
+            <p>Secure content management</p>
+        </div>
+
+        <div class="login-right">
+            <h2 class="login-title">Welcome Back</h2>
+            <p class="login-subtitle">Please enter your credentials</p>
+
+            <form id="loginForm">
+                
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">📧</span>
+                        <input id="email" type="email" placeholder="admin@example.com" required autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input id="password" type="password" placeholder="••••••••" required autocomplete="current-password">
+                        <button 
+                            type="button" 
+                            class="password-toggle" 
+                            id="passwordToggle"
+                            aria-label="Toggle password visibility"
+                            title="Toggle password visibility"
+                        >
+                            👁️
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login" id="submitBtn">
+                    <span id="btnText">Sign In</span>
+                    <span id="btnLoader" class="loader-icon hidden">⏳</span>
+                </button>
+
+                <div id="loginMsg" class="message-box"></div>
+
+            </form>
+
+            <div class="home-link">
+                <a href="/home">← Back to Home Page</a>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Load script.js for redirect handling -->
+    <script src="/script.js"></script>
+
+    <script>
+        
+        // Toggle password visibility
+        document.getElementById("passwordToggle").addEventListener("click", () => {
+            const input = document.getElementById("password");
+            const btn = document.getElementById("passwordToggle");
+
+            if (input.type === "password") {
+                input.type = "text";
+                btn.textContent = "🙈";
+            } else {
+                input.type = "password";
+                btn.textContent = "👁️";
+            }
+        });
+
+        // Login handler
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            const msg = document.getElementById("loginMsg");
+            const btn = document.getElementById("submitBtn");
+            const btnText = document.getElementById("btnText");
+            const loader = document.getElementById("btnLoader");
+
+            // Clear any previous messages
+            msg.className = "message-box";
+            msg.textContent = "";
+
+            // Validate inputs
+            if (!email || !password) {
+                msg.className = "message-box error";
+                msg.textContent = "Please enter both email and password";
+                return;
+            }
+
+            // Loading state
+            btn.disabled = true;
+            btnText.textContent = "Verifying...";
+            loader.classList.remove("hidden");
+
+            console.log("[LOGIN] Attempting login for:", email);
+
+            try {
+                const res = await fetch(`${API}/login`, {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({email, password})
+                });
+
+                const data = await res.json();
+                console.log("[LOGIN] Response status:", res.status);
+
+                if (res.ok && data.token) {
+                    console.log("[LOGIN] Success! Saving token and redirecting...");
+                    
+                    // Save credentials
+                    sessionStorage.setItem("token", data.token);
+                    sessionStorage.setItem("userEmail", data.user.email);
+
+                    // Show success message
+                    msg.className = "message-box success";
+                    msg.textContent = "Login successful! Redirecting...";
+
+                    // Redirect after short delay - use replace to prevent back button issues
+                    setTimeout(() => {
+                        console.log("[LOGIN] Redirecting to /admin");
+                        window.location.replace("/admin");
+                    }, 1000);
+                    
+                    return; // Don't reset button state
+                }
+                else {
+                    console.log("[LOGIN] Failed:", data.detail);
+                    // Show error message
+                    msg.className = "message-box error";
+                    msg.textContent = data.detail || "Invalid credentials. Please try again.";
+                }
+
+            } catch (err) {
+                console.error("[LOGIN] Error:", err);
+                msg.className = "message-box error";
+                msg.textContent = "Connection error. Please check if the server is running.";
+            }
+
+            // Reset button state (only if login failed)
+            loader.classList.add("hidden");
+            btn.disabled = false;
+            btnText.textContent = "Sign In";
+        });
+    </script>
+
+</body>
+</html>

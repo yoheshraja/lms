@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | User Management</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <div class="header-content">
+        <div>Admin Dashboard</div>
+
+        <div class="admin-info">
+            <div class="admin-avatar">
+                <i class="fas fa-user-shield"></i>
+            </div>
+
+            <div class="admin-details">
+                <div class="admin-name">Admin User</div>
+                <div class="admin-role">Content Manager</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Layout -->
+<div class="dashboard-container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="/admin/upload" class="menu-item">
+                <i class="fas fa-upload"></i><span>Upload Content</span>
+            </a></li>
+
+            <li><a href="/admin/content-library" class="menu-item">
+                <i class="fas fa-folder-open"></i><span>Content Library</span>
+            </a></li>
+
+            <li><a href="/admin/analytics" class="menu-item">
+                <i class="fas fa-chart-bar"></i><span>Analytics</span>
+            </a></li>
+
+            <li><a href="/admin" class="menu-item active">
+                <i class="fas fa-users"></i><span>User Management</span>
+            </a></li>
+
+            <li><a href="/admin/settings" class="menu-item">
+                <i class="fas fa-cog"></i><span>Settings</span>
+            </a></li>
+        </ul>
+
+        <button class="logout-btn btn btn-outline" onclick="logout()" aria-label="Logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- User Management Header -->
+        <div class="form-container">
+            <div class="form-header">
+
+                <div class="form-title">User Management</div>
+
+                <div class="cols-2 gap-15">
+                    <div class="form-group no-margin-bottom">
+                        <input 
+                            type="text" 
+                            id="searchUsers" 
+                            class="search-input" 
+                            placeholder="Search users..." 
+                            onkeyup="handleSearch('searchUsers', 'usersTable')"
+                            aria-label="Search users"
+                        >
+                    </div>
+
+                    <button class="btn btn-primary" aria-label="Add new user">
+                        <i class="fas fa-user-plus"></i>
+                        Add New User
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- User Cards -->
+        <div class="users-grid">
+
+            <!-- Card 1 -->
+            <div class="user-card">
+                <div class="user-avatar large">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="user-name">John Smith</div>
+                <div class="user-email">john.smith@example.com</div>
+                <div class="user-role">Administrator</div>
+
+                <div class="user-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">142</div>
+                        <div class="stat-label-small">Content</div>
+                    </div>
+
+                    <div class="stat-item">
+                        <div class="stat-number">45</div>
+                        <div class="stat-label-small">Uploads</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons actions-top-padding">
+                    <button class="btn btn-outline full-width" aria-label="Edit user John Smith">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="user-card">
+                <div class="user-avatar large">
+                    <i class="fas fa-user-edit"></i>
+                </div>
+                <div class="user-name">Sarah Johnson</div>
+                <div class="user-email">sarah.j@example.com</div>
+                <div class="user-role">Content Manager</div>
+
+                <div class="user-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">89</div>
+                        <div class="stat-label-small">Content</div>
+                    </div>
+
+                    <div class="stat-item">
+                        <div class="stat-number">23</div>
+                        <div class="stat-label-small">Uploads</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons actions-top-padding">
+                    <button class="btn btn-outline full-width" aria-label="Edit user Sarah Johnson">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="user-card">
+                <div class="user-avatar large">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-name">Mike Chen</div>
+                <div class="user-email">mike.chen@example.com</div>
+                <div class="user-role">Editor</div>
+
+                <div class="user-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">67</div>
+                        <div class="stat-label-small">Content</div>
+                    </div>
+
+                    <div class="stat-item">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label-small">Uploads</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons actions-top-padding">
+                    <button class="btn btn-outline full-width" aria-label="Edit user Mike Chen">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- USERS TABLE -->
+        <div class="data-table-container">
+            <table class="data-table" id="usersTable">
+
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Join Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <!-- Row 1 -->
+                    <tr>
+                        <td>
+                            <div class="row-flex">
+                                <div class="user-avatar small">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <div>
+                                    <div class="content-title">John Smith</div>
+                                    <div class="role-subtext">Admin</div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>john.smith@example.com</td>
+                        <td>Administrator</td>
+                        <td>Jan 15, 2022</td>
+
+                        <td>
+                            <span class="status-tag active">Active</span>
+                        </td>
+
+                        <td>
+                            <div class="content-actions">
+                                <button class="action-btn" aria-label="Edit user John Smith"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn" aria-label="Delete user John Smith"><i class="fas fa-trash"></i></button>
+                                <button class="action-btn" aria-label="View user John Smith"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Add more rows same format as needed -->
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script src="/script.js"></script>
+</body>
+</html>

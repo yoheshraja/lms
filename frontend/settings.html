@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="header">
+    <div class="header-content">
+        <div>Admin Dashboard</div>
+        <div class="admin-info">
+            <div class="admin-avatar">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="admin-details">
+                <div class="admin-name">Admin User</div>
+                <div class="admin-role">Content Manager</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="/admin/upload" class="menu-item">
+                <i class="fas fa-upload"></i>
+                <span>Upload Content</span>
+            </a></li>
+
+            <li><a href="/admin/content-library" class="menu-item">
+                <i class="fas fa-folder-open"></i>
+                <span>Content Library</span>
+            </a></li>
+
+            <li><a href="/admin/analytics" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Analytics</span>
+            </a></li>
+
+            <li><a href="/admin/user-management" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>User Management</span>
+            </a></li>
+
+            <li><a href="/admin" class="menu-item active">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a></li>
+        </ul>
+
+        <button class="logout-btn btn btn-outline" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </button>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- Settings Header -->
+        <div class="form-container">
+            <div class="form-header">
+                <div class="form-title">System Settings</div>
+
+                <div class="action-buttons no-margin-top">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        <span>Save Changes</span>
+                    </button>
+
+                    <button class="btn btn-outline">
+                        <i class="fas fa-history"></i>
+                        <span>Reset to Default</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Grid -->
+        <div class="settings-grid">
+
+            <!-- General Settings -->
+            <div class="setting-card">
+                <div class="setting-header">
+                    <div class="setting-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="setting-title">General Settings</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="siteName">Site Name</label>
+                    <input id="siteName" type="text" value="Content Management System">
+                </div>
+
+                <div class="form-group">
+                    <label for="siteDescription">Site Description</label>
+                    <textarea id="siteDescription" rows="3">A modern content management platform for educational resources</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="timezone">Timezone</label>
+                    <select id="timezone">
+                        <option>UTC-5 (Eastern Time)</option>
+                        <option>UTC-8 (Pacific Time)</option>
+                        <option>UTC+0 (GMT)</option>
+                        <option>UTC+1 (Central European)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Content Settings -->
+            <div class="setting-card">
+                <div class="setting-header">
+                    <div class="setting-icon">
+                        <i class="fas fa-file-video"></i>
+                    </div>
+                    <div class="setting-title">Content Settings</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="autoPublish">Auto-publish content</label>
+                    <label class="toggle-switch float-right">
+                        <input type="checkbox" id="autoPublish">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="maxFileSize">Maximum File Size (MB)</label>
+                    <input id="maxFileSize" type="number" value="500">
+                </div>
+
+                <div class="form-group">
+                    <label for="allowedFormats">Allowed Formats</label>
+                    <input id="allowedFormats" type="text" value="mp4, mov, avi, mp3, wav, jpg, png, pdf">
+                </div>
+            </div>
+
+            <!-- User Settings -->
+            <div class="setting-card">
+                <div class="setting-header">
+                    <div class="setting-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="setting-title">User Settings</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="userRegistration">Allow User Registration</label>
+                    <label class="toggle-switch float-right">
+                        <input type="checkbox" id="userRegistration" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="emailVerification">Require Email Verification</label>
+                    <label class="toggle-switch float-right">
+                        <input type="checkbox" id="emailVerification" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="defaultRole">Default User Role</label>
+                    <select id="defaultRole">
+                        <option>Viewer</option>
+                        <option>Editor</option>
+                        <option>Content Manager</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Notification Settings -->
+            <div class="setting-card">
+                <div class="setting-header">
+                    <div class="setting-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="setting-title">Notifications</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="emailNotifications">Email Notifications</label>
+                    <label class="toggle-switch float-right">
+                        <input type="checkbox" id="emailNotifications" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="contentAlerts">New Content Alerts</label>
+                    <label class="toggle-switch float-right">
+                        <input type="checkbox" id="contentAlerts" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="userAlerts">User Activity Alerts</label>
+                    <label class="toggle-switch float-right">
+                        <input type="checkbox" id="userAlerts">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Security Settings -->
+            <div class="setting-card">
+                <div class="setting-header">
+                    <div class="setting-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="setting-title">Security</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="twoFactorAuth">Two-Factor Authentication</label>
+                    <label class="toggle-switch float-right">
+                        <input type="checkbox" id="twoFactorAuth">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="sessionTimeout">Session Timeout (minutes)</label>
+                    <input id="sessionTimeout" type="number" value="60">
+                </div>
+
+                <div class="form-group">
+                    <label for="passwordPolicy">Password Policy</label>
+                    <select id="passwordPolicy">
+                        <option>Standard</option>
+                        <option>Strong</option>
+                        <option>Very Strong</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Backup Settings -->
+            <div class="setting-card">
+                <div class="setting-header">
+                    <div class="setting-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="setting-title">Backup & Export</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="autoBackup">Automatic Backups</label>
+                    <label class="toggle-switch float-right">
+                        <input type="checkbox" id="autoBackup" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="backupFrequency">Backup Frequency</label>
+                    <select id="backupFrequency">
+                        <option>Daily</option>
+                        <option>Weekly</option>
+                        <option>Monthly</option>
+                    </select>
+                </div>
+
+                <div class="action-buttons margin-top-20">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-download"></i>
+                        <span>Export Data</span>
+                    </button>
+
+                    <button class="btn btn-outline">
+                        <i class="fas fa-upload"></i>
+                        <span>Import Data</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="form-container danger-border-left">
+            <div class="form-header">
+                <div class="form-title danger-text">Danger Zone</div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <h4>Clear All Content</h4>
+                    <p class="gray-text margin-10">Permanently delete all content from the system. This action cannot be undone.</p>
+                    <button class="btn btn-outline danger-outline">
+                        <i class="fas fa-trash"></i>
+                        <span>Clear All Content</span>
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <h4>Reset System</h4>
+                    <p class="gray-text margin-10">Reset the entire system to factory defaults. All data will be lost.</p>
+                    <button class="btn btn-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Reset System</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/script.js"></script>
+</body>
+</html>

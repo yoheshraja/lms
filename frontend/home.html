@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Hub | Explore Content</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/home.css">
+</head>
+
+<body>
+
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-shapes"></i>
+            <span>Learning Hub</span>
+        </div>
+
+    <button onclick="loadGoogleTranslate()">🌐 Translate</button>
+<div id="google_translate_element" style="display:none;"></div>
+
+        <div class="nav-links">
+            <a href="/login" class="btn btn-outline" aria-label="Admin Login">
+                <i class="fas fa-user-shield"></i>
+                <span class="btn-text">Admin Login</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero">
+        <h1>Discover Knowledge</h1>
+        <p>Explore our curated library of educational resources, videos, and articles.</p>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+        <div class="search-box">
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Search for topics, titles..." 
+                aria-label="Search content"
+                onkeyup="filterContent()">
+            <button aria-label="Search">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container">
+        
+        <div class="content-grid" id="publicContentGrid">
+            <div class="loading-container">
+                <div class="loader"></div>
+            </div>
+        </div>
+
+        <div id="noResults" class="no-results hidden-element">
+            <i class="fas fa-search fa-3x no-results-icon"></i>
+            <h3>No content found</h3>
+            <p>Try adjusting your search terms.</p>
+        </div>
+
+    </div>
+
+    <!-- JS -->
+    <script src="/home.js"></script>
+        
+</body>
+</html>
